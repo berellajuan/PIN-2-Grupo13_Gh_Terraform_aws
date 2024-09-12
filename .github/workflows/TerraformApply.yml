@@ -1,34 +1,35 @@
 name: Terraform Apply
 
 on:
-  workflow_dispatch: # Permite iniciar el flujo manualmente
-
+  workflow_dispatch: # Permite que el workflow se ejecute manualmente desde la interfaz de GitHub Actions.
+  
 jobs:
   terraform_apply:
-    name: "Terraform Apply"
-    runs-on: ubuntu-latest
+    name: "Terraform Apply - Grupo 13" # Nombre del trabajo que aparece en la interfaz de GitHub Actions.
+    runs-on: ubuntu-latest # Define el sistema operativo en el que se ejecutará el trabajo
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout # verifica y obtiene el código fuente del repositorio
+        uses: actions/checkout@v2 # Accion de GitHub para clonar el repositorio en el entorno virtual
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform # Paso para configurar Terraform en el entorno
+        uses: hashicorp/setup-terraform@v1 # Utiliza una acción oficial de HashiCorp para instalar Terraform en la máquina
 
-      - name: Terraform Init
+      - name: Terraform Init # Paso para inicializar el directorio de trabajo con Terraform
         id: init
-        run: terraform init
+        run: terraform init # Comando para inicializar Terraform
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
 
-      - name: Terraform Apply
-        id: apply
-        run: terraform apply -auto-approve
+      - name: Terraform Validate # Paso para validar los archivos de configuración de Terraform
+        id: validate 
+        run: terraform validate -no-color # Ejecuta la validación sin colorear la salida. Verifica que la sintaxis y los recursos sean válidos
+
+      - name: Terraform Apply # Paso para aplicar los cambios de infraestructura con Terraform
+        id: apply 
+        run: terraform apply -auto-approve # Ejecuta `terraform apply` automáticamente sin pedir confirmación del usuario
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
